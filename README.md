@@ -14,3 +14,5 @@ Dependencies:
 Compile Command: gcc -o [file_name] [file_name].c -I/opt/homebrew/opt/openssl@3/include -L/opt/homebrew/opt/openssl@3/lib -lssl -lcrypto
 
 Execute Commadn: ./[file_name]
+
+helped from ChatGpt and "https://www.youtube.com/watch?v=z35ycllXoFs"
