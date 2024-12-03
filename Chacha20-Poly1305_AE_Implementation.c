@@ -20,19 +20,6 @@ unsigned long long num_blocks = 0;
 #define HARDWARE_FREQ_HZ 100000 // 100 kHz
 #define SOFTWARE_FREQ_HZ 4000000 // 4 MHz
 
-// Gecikme (Latency) hesaplamak için fonksiyon
-double get_latency_in_seconds() {
-    struct timespec start, end;
-    clock_gettime(CLOCK_MONOTONIC, &start);
-
-    // Bekleme süresi veya şifreleme işlemi
-    usleep(1000); // 1ms kadar bekletiyoruz (örnek olarak)
-
-    clock_gettime(CLOCK_MONOTONIC, &end);
-    double latency = (end.tv_sec - start.tv_sec) + (end.tv_nsec - start.tv_nsec) / 1.0e9;
-    return latency;  // saniye cinsinden
-}
-
 // ChaCha20-Poly1305 şifreleme fonksiyonu
 int chacha20_poly1305_encrypt(const unsigned char *plaintext, int plaintext_len,
                               const unsigned char *key, const unsigned char *iv,
@@ -198,24 +185,26 @@ int verify_data(const unsigned char *plaintext, const unsigned char *decrypted, 
 }
 
 int main(int argc, char *argv[]) {
-    //unsigned char key[KEY_SIZE] = {0x00}; // Chacha20-128 key
-    unsigned char key[KEY_SIZE] = "0123456789abcdef"; // Chacha20-128 key
-    unsigned char iv[IV_SIZE] = {0x00};  // GCM IV, genellikle 12 byte
+    unsigned char key[KEY_SIZE] = "0123456789abcdef0123456789abcdef"; // Chacha20-128 key
+    unsigned char iv[IV_SIZE] = {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00};  // GCM IV, genellikle 12 byte
     unsigned char tag[TAG_SIZE];
-    unsigned char plaintext[] = "Hello, this is a test message!";
+    unsigned char plaintext[] = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.";
     int plaintext_len = strlen((char *)plaintext);
     unsigned char ciphertext[1024];
 
     // Performans metriklerini ölçmek için gerekli parametreler
     double cycles_per_block = 1000000;  // Örnek olarak birim başına 1M döngü (bu değer ölçülmelidir)
-    int block_size_bits = 128;          // AES-128 için blok boyutu 128 bit
+    int block_size_bits = 512;          // Chacha20-Poly1305 için blok boyutu 512 bit
     // Çalıştırılabilir dosyanın yolunu argv[0] üzerinden alıyoruz
     char *executable_file = argv[0];
     double code_size_kge = get_executable_code_size_kge(executable_file);          // Varsayım olarak 50 kGE
 
-    // AES şifreleme işlemi
+    struct timespec start, end;
+    clock_gettime(CLOCK_MONOTONIC, &start);
+    // Chacha20-Poly1305 şifreleme işlemi
     int ciphertext_len = chacha20_poly1305_encrypt(plaintext, plaintext_len, key, iv, ciphertext, tag);
-
+    clock_gettime(CLOCK_MONOTONIC, &end);
+    double latency = (end.tv_sec - start.tv_sec) + (end.tv_nsec - start.tv_nsec) / 1.0e9;
 
     printf("Ciphertext (hex):\n");
     for (int i = 0; i < ciphertext_len; i++) {
@@ -233,7 +222,6 @@ int main(int argc, char *argv[]) {
     }
 
     printf("Deşifrelenmiş veri başarıyla oluşturuldu.\n");
-
     // Verilerin uyuşup uyuşmadığını kontrol et
     if (verify_data(plaintext, decrypted, plaintext_len)) {
         printf("Veriler doğru bir şekilde deşifre edildi.\n");
@@ -241,16 +229,13 @@ int main(int argc, char *argv[]) {
         printf("Verilerde bir uyuşmazlık tespit edildi.\n");
     }
 
-
     // Performans metriklerini hesapla
-    double latency = get_latency_in_seconds(); // Latency ölçümü
     double cpu_time_used = latency / CLOCKS_PER_SEC;
     // Döngü sayısını hesaplamak için saniyeyi işlemci hızına çevir
     cycles_per_block = cpu_time_used * CLOCK_SPEED_HZ;
     double energy = calculate_energy(plaintext, cycles_per_block, latency, block_size_bits); // Enerji hesaplama
     num_blocks = (strlen((char *)plaintext) + block_size_bits - 1) / block_size_bits;
     double throughput = calculate_throughput(num_blocks, block_size_bits, latency); // Throughput hesaplama
-    
     double efficiency = calculate_efficiency(throughput, code_size_kge); // Yazılım verimliliği hesaplama
 
     // Sonuçları ekrana yazdır
